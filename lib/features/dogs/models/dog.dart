@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dog.g.dart';
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class Dog {
   Dog({
     required this.id,
@@ -18,5 +18,7 @@ class Dog {
   final String url;
   final num width;
   final num height;
-  final List<String> breeds;
+  final List<String>? breeds;
+
+  Map<String, dynamic> toJson() => _$DogToJson(this);
 }

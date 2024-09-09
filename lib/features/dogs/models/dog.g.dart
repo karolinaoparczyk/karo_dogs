@@ -12,5 +12,13 @@ Dog _$DogFromJson(Map<String, dynamic> json) => Dog(
       width: json['width'] as num,
       height: json['height'] as num,
       breeds:
-          (json['breeds'] as List<dynamic>).map((e) => e as String).toList(),
+          (json['breeds'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
+
+Map<String, dynamic> _$DogToJson(Dog instance) => <String, dynamic>{
+      'id': instance.id,
+      'url': instance.url,
+      'width': instance.width,
+      'height': instance.height,
+      'breeds': instance.breeds,
+    };

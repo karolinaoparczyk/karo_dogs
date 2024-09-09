@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:karo_dogs/features/dogs/models/dog.dart';
 import 'package:retrofit/retrofit.dart';
 
-part 'dog_api_service.g.dart';
+part 'dogs_api_service.g.dart';
 
 @RestApi()
-abstract class DogApiService {
-  static DogApiService create(Dio dio) => _DogApiService(dio);
+abstract class DogsApiService {
+  static DogsApiService create(Dio dio) => _DogsApiService(dio);
 
   @GET('/images/search')
   Future<List<Dog>> getDogs({
