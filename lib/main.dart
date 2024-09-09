@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:karo_dogs/repository/dog_api_service.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +12,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dogApiService = DogApiService.create(
+      Dio(
+        BaseOptions(baseUrl: 'https://api.thecatapi.com/v1'),
+      ),
+    );
+
     return MaterialApp(
       title: 'Karo Dogs',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Karo Dogs Home Page'),
+      home: MultiProvider(
+        providers: [
+          Provider.value(value: dogApiService),
+        ],
+        child: const MyHomePage(title: 'Karo Dogs Home Page'),
+      ),
     );
   }
 }
