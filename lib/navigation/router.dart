@@ -12,9 +12,8 @@ GoRouter createGoRouter(BuildContext context) {
       if (kIsWeb)
         GoRoute(
           path: '/dogs/:dogName',
-          pageBuilder: (context, state) {
-            return DogsWithDetailsPage(
-              key: ValueKey(state.pathParameters['dogName']),
+          builder: (context, state) {
+            return DogsWithDetailsScreen(
               dogName: state.pathParameters['dogName'],
             );
           },
