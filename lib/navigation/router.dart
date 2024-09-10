@@ -11,10 +11,10 @@ GoRouter createGoRouter(BuildContext context) {
     routes: [
       if (kIsWeb)
         GoRoute(
-          name: 'dogs',
           path: '/dogs/:dogName',
-          builder: (context, state) {
-            return DogsWithDetailsScreen(
+          pageBuilder: (context, state) {
+            return DogsWithDetailsPage(
+              key: ValueKey(state.pathParameters['dogName']),
               dogName: state.pathParameters['dogName'],
             );
           },
