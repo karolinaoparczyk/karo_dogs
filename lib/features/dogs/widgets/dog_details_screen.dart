@@ -37,11 +37,15 @@ class DogDetailsScreen extends HookWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                child: CachedNetworkImage(
-                  imageUrl: dog.imageLink,
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => const LoadingIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 300),
+                  child: CachedNetworkImage(
+                    imageUrl: dog.imageLink,
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) => const LoadingIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
               _Content(
