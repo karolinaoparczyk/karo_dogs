@@ -100,7 +100,9 @@ class _Content extends StatelessWidget {
 
     return Row(
       children: [
-        Text(label, style: style),
+        Expanded(
+          child: Text(label, style: style, overflow: TextOverflow.ellipsis),
+        ),
         const Spacer(),
         Text(value.toString(), style: style),
       ],

@@ -36,7 +36,8 @@ class DogsWithDetailsScreen extends StatelessWidget {
     return Row(
       children: [
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width / 3),
           child: const DogsScreen(),
         ),
         const VerticalDivider(),
