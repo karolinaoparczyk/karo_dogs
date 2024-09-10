@@ -12,9 +12,14 @@ GoRouter createGoRouter(BuildContext context) {
       if (kIsWeb)
         GoRoute(
           path: '/dogs/:name',
-          builder: (context, state) {
-            return DogsWithDetailsScreen(
-              name: state.pathParameters['name'],
+          pageBuilder: (context, state) {
+            return CustomTransitionPage(
+              key: state.pageKey,
+              child: DogsWithDetailsScreen(
+                name: state.pathParameters['name'],
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) => child,
             );
           },
         ),
