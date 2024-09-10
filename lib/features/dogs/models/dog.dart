@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 part 'dog.g.dart';
 
@@ -22,11 +21,10 @@ class Dog {
     required this.barking,
     required this.minLifeExpectancy,
     required this.maxLifeExpectancy,
-  }) : id = const Uuid().v4();
+  });
 
   factory Dog.fromJson(Map<String, dynamic> json) => _$DogFromJson(json);
 
-  final String id;
   final String name;
   @JsonKey(name: 'image_link')
   final String imageLink;

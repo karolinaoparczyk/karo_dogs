@@ -10,16 +10,16 @@ import 'package:karo_dogs/features/dogs/models/dog.dart';
 import 'package:more/more.dart';
 
 class DogDetailsScreen extends HookWidget {
-  const DogDetailsScreen(this.dogName, {super.key});
+  const DogDetailsScreen(this.name, {super.key});
 
-  final String dogName;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
     final dog = context.select<DogsBloc, Dog?>(
       (bloc) => switch (bloc.state) {
         DogsLoaded(:final dogs) =>
-          dogs.firstWhereOrNull((dog) => dog.name == dogName),
+          dogs.firstWhereOrNull((dog) => dog.name == name),
         _ => null,
       },
     );

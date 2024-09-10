@@ -5,10 +5,10 @@ import 'package:karo_dogs/features/dogs/widgets/dogs_screen.dart';
 class DogsWithDetailsScreen extends StatelessWidget {
   const DogsWithDetailsScreen({
     super.key,
-    this.dogName,
+    this.name,
   });
 
-  final String? dogName;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,10 @@ class DogsWithDetailsScreen extends StatelessWidget {
           child: const DogsScreen(),
         ),
         const VerticalDivider(),
-        if (dogName case final name?)
+        if (name case final label?)
           Expanded(
             flex: 2,
-            child: DogDetailsScreen(name),
+            child: DogDetailsScreen(label),
           ),
       ],
     );
