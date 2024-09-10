@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:karo_dogs/config.dart';
+import 'package:go_router/go_router.dart';
+import 'package:karo_dogs/common/dog_scaffold.dart';
+import 'package:karo_dogs/common/loading_indicator.dart';
 import 'package:karo_dogs/features/dogs/bloc/dogs_bloc.dart';
+import 'package:karo_dogs/features/dogs/models/dog.dart';
 
 class DogsScreen extends HookWidget {
   const DogsScreen({super.key});
@@ -50,21 +53,7 @@ class DogsScreen extends HookWidget {
       const [],
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: RichText(
-          text: TextSpan(
-            children: [
-              const WidgetSpan(
-                child: Icon(Icons.pets, color: Colors.white),
-              ),
-              TextSpan(text: ' ${AppConfig.appTitle}'),
-            ],
-            style: const TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        ),
-        backgroundColor: Colors.green,
-      ),
+    return DogScaffold(
       body: switch (dogsBloc.state) {
         DogsLoading() => const LoadingIndicator(),
         DogsLoaded(:final dogs) => CustomScrollView(
@@ -80,19 +69,7 @@ class DogsScreen extends HookWidget {
                         return const LoadingIndicator();
                       }
 
-                      final dog = dogs.elementAt(index);
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: ListTile(
-                          title: Text(
-                            '${index + 1}. ${dog.name}',
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          tileColor: Colors.green.shade100,
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                        ),
-                      );
+                      return _DogRow(dogs.elementAt(index), index);
                     },
                     itemCount: dogs.length + 1,
                     separatorBuilder: (_, __) => const Divider(),
@@ -106,15 +83,24 @@ class DogsScreen extends HookWidget {
   }
 }
 
-class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({super.key});
+class _DogRow extends StatelessWidget {
+  const _DogRow(this.dog, this.index);
+
+  final Dog dog;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      child: Center(
-        child: CircularProgressIndicator.adaptive(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: ListTile(
+        title: Text(
+          '${index + 1}. ${dog.name}',
+          style: const TextStyle(fontSize: 20),
+        ),
+        tileColor: Colors.green.shade100,
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () => context.go('/dogs/${dog.id}'),
       ),
     );
   }
