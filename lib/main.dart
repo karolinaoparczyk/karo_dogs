@@ -16,6 +16,7 @@ import 'package:logging/logging.dart';
 
 void main() async {
   _setupLogger();
+
   if (!kIsWeb) {
     CachedQuery.instance.config(
       storage: await CachedStorage.ensureInitialized(),
