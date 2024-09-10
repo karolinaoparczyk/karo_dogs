@@ -15,10 +15,16 @@ class DogScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.pets, color: Colors.white),
-        title: Text(
-          ' ${title ?? AppConfig.appTitle}',
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+        title: RichText(
+          text: TextSpan(
+            children: [
+              const WidgetSpan(
+                child: Icon(Icons.pets, color: Colors.white),
+              ),
+              TextSpan(text: ' ${title ?? AppConfig.appTitle}'),
+            ],
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
         ),
         backgroundColor: Colors.green,
       ),
