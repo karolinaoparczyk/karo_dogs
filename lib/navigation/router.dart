@@ -12,9 +12,11 @@ GoRouter createGoRouter(BuildContext context) {
       if (kIsWeb)
         GoRoute(
           name: 'dogs',
-          path: '/dogs/:id',
+          path: '/dogs/:dogName',
           builder: (context, state) {
-            return DogsWithDetailsScreen(dogId: state.pathParameters['id']);
+            return DogsWithDetailsScreen(
+              dogName: state.pathParameters['dogName'],
+            );
           },
         ),
       GoRoute(
@@ -24,11 +26,11 @@ GoRouter createGoRouter(BuildContext context) {
         routes: [
           if (!kIsWeb)
             GoRoute(
-              path: ':id',
+              path: ':dogName',
               builder: (context, state) {
-                final id = state.pathParameters['id'];
+                final id = state.pathParameters['dogName'];
                 if (id == null) {
-                  throw Exception('Dog ID is required');
+                  throw Exception('Dog name is required');
                 }
 
                 return DogDetailsScreen(id);

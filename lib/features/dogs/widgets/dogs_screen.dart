@@ -100,7 +100,7 @@ class _DogRow extends StatelessWidget {
         ),
         tileColor: Colors.green.shade100,
         trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: () => context.go('/dogs/${dog.id}'),
+        onTap: () => context.go('/dogs/${dog.name}'),
       ),
     );
   }
