@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_query/cached_query.dart';
 import 'package:cached_storage/cached_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,10 +16,11 @@ import 'package:logging/logging.dart';
 
 void main() async {
   _setupLogger();
-
-  CachedQuery.instance.config(
-    storage: await CachedStorage.ensureInitialized(),
-  );
+  if (!kIsWeb) {
+    CachedQuery.instance.config(
+      storage: await CachedStorage.ensureInitialized(),
+    );
+  }
 
   runApp(const MyApp());
 }
@@ -29,11 +31,11 @@ class MyApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final dogsRepository = useMemoized(
-      () => DogsRepository(
-        DogsApiService.create(
-          Dio(BaseOptions(baseUrl: AppConfig.dogApiUrl)),
-        ),
-      ),
+      () {
+        final dio = Dio(BaseOptions(baseUrl: AppConfig.dogsApiUrl))
+          ..interceptors.add(DogsApiInterceptor(AppConfig.dogsApiKey));
+        return DogsRepository(DogsApiService.create(dio));
+      },
     );
     final router = useMemoized(() => createGoRouter(context));
 

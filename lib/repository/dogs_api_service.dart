@@ -8,10 +8,9 @@ part 'dogs_api_service.g.dart';
 abstract class DogsApiService {
   static DogsApiService create(Dio dio) => _DogsApiService(dio);
 
-  @GET('/images/search')
+  @GET('/dogs')
   Future<List<Dog>> getDogs({
-    @Query('limit') int limit = 1,
-    @Query('page') int page = 0,
-    @Query('has_breeds') bool hasBreeds = true,
+    @Query('offset') required int offset,
+    @Query('min_height') int? minHeight = 1,
   });
 }

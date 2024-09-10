@@ -5,20 +5,15 @@ part 'dog.g.dart';
 @JsonSerializable()
 class Dog {
   Dog({
-    required this.id,
-    required this.url,
-    required this.width,
-    required this.height,
-    required this.breeds,
+    required this.name,
+    required this.imageLink,
   });
 
   factory Dog.fromJson(Map<String, dynamic> json) => _$DogFromJson(json);
 
-  final String id;
-  final String url;
-  final num width;
-  final num height;
-  final List<String>? breeds;
+  final String name;
+  @JsonKey(name: 'image_link')
+  final String imageLink;
 
   Map<String, dynamic> toJson() => _$DogToJson(this);
 }

@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,6 +7,16 @@ import 'package:karo_dogs/features/dogs/bloc/dogs_bloc.dart';
 class DogsScreen extends HookWidget {
   const DogsScreen({super.key});
 
+  static bool _isBottom(ScrollController scrollController) {
+    if (!scrollController.hasClients) {
+      return false;
+    }
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.offset;
+
+    return currentScroll >= (maxScroll - 100);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dogsBloc = context.watch<DogsBloc>();
@@ -18,6 +25,27 @@ class DogsScreen extends HookWidget {
       () {
         dogsBloc.add(const LoadInitialDogs());
         return null;
+      },
+      const [],
+    );
+
+    final scrollController = useScrollController();
+
+    useEffect(
+      () {
+        void listener() {
+          if (!_isBottom(scrollController)) {
+            return;
+          }
+
+          if (dogsBloc.state case DogsLoaded(hasMore: true)) {
+            dogsBloc.add(const LoadMoreDogs());
+          }
+        }
+
+        scrollController.addListener(listener);
+
+        return () => scrollController.removeListener(listener);
       },
       const [],
     );
@@ -40,37 +68,36 @@ class DogsScreen extends HookWidget {
       body: switch (dogsBloc.state) {
         DogsLoading() => const LoadingIndicator(),
         DogsLoaded(:final dogs) => CustomScrollView(
+            controller: scrollController,
             slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final dog = dogs.elementAt(index);
-                    final photoRatio = dog.width / dog.height;
-                    final deviceRatio = MediaQuery.of(context).devicePixelRatio;
-                    final width = min(
-                      MediaQuery.of(context).size.width,
-                      dog.width,
-                    );
-                    final height = width / photoRatio;
+              if (dogs.isNotEmpty)
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  sliver: SliverList.separated(
+                    itemBuilder: (context, index) {
+                      if (dogsBloc.state case DogsLoaded(hasMore: true)
+                          when index == dogs.length) {
+                        return const LoadingIndicator();
+                      }
 
-                    return Container(
-                      height: height,
-                      width: width.toDouble(),
-                      padding: const EdgeInsets.all(16),
-                      child: CachedNetworkImage(
-                        imageUrl: dog.url,
-                        fit: BoxFit.fill,
-                        memCacheHeight: (height * deviceRatio).round(),
-                        memCacheWidth: (width * deviceRatio).round(),
-                        placeholder: (context, url) => const LoadingIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                    );
-                  },
-                  childCount: dogs.length,
+                      final dog = dogs.elementAt(index);
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: ListTile(
+                          title: Text(
+                            '${index + 1}. ${dog.name}',
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          tileColor: Colors.green.shade100,
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                        ),
+                      );
+                    },
+                    itemCount: dogs.length + 1,
+                    separatorBuilder: (_, __) => const Divider(),
+                  ),
                 ),
-              ),
             ],
           ),
         DogsError() => const Center(child: Text('Failed to load dogs')),
@@ -84,8 +111,11 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator.adaptive(),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
     );
   }
 }

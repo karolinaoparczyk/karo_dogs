@@ -1,3 +1,4 @@
+import 'package:cached_query/cached_query.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_dogs/features/dogs/models/dog.dart';
@@ -19,14 +20,18 @@ class DogsBloc extends Bloc<DogsEvent, DogsState> {
     Emitter<DogsState> emit,
   ) async {
     return emit.forEach(
-      dogRepository.getDogs(limit: 25).stream,
+      dogRepository.getDogs().stream,
       onData: (queryState) {
         final data = queryState.data?.flattened;
-        if (data == null) {
-          return state;
+        if (data == null ||
+            state is DogsLoading && queryState.status == QueryStatus.loading) {
+          return const DogsLoading();
         }
 
-        return DogsLoaded(data);
+        return DogsLoaded(
+          data,
+          hasMore: !queryState.hasReachedMax,
+        );
       },
       onError: (err, st) {
         _logger.severe('Fetching dogs failed', err, st);
@@ -52,9 +57,13 @@ class DogsLoading extends DogsState {
 }
 
 class DogsLoaded extends DogsState {
-  const DogsLoaded(this.dogs);
+  const DogsLoaded(
+    this.dogs, {
+    required this.hasMore,
+  });
 
   final Iterable<Dog> dogs;
+  final bool hasMore;
 }
 
 class DogsError extends DogsState {

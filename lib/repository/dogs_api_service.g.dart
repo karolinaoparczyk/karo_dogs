@@ -23,16 +23,15 @@ class _DogsApiService implements DogsApiService {
 
   @override
   Future<List<Dog>> getDogs({
-    int limit = 1,
-    int page = 0,
-    bool hasBreeds = true,
+    required int offset,
+    int? minHeight = 1,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'limit': limit,
-      r'page': page,
-      r'has_breeds': hasBreeds,
+      r'offset': offset,
+      r'min_height': minHeight,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<List<Dog>>(Options(
@@ -42,7 +41,7 @@ class _DogsApiService implements DogsApiService {
     )
         .compose(
           _dio.options,
-          '/images/search',
+          '/dogs',
           queryParameters: queryParameters,
           data: _data,
         )

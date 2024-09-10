@@ -9,8 +9,8 @@ environment:
   flutter: 3.24.1
 
 dependencies:
-  cached_network_image: ^3.4.1
-  cached_query: ^2.0.7
+  cached_network_image: 3.4.1
+  cached_query: 2.0.7
   cached_storage: ^2.0.7
   collection: 1.18.0
   dio: 5.7.0
