@@ -13,7 +13,7 @@ class DogsRepository {
 
   InfiniteQuery<List<Dog>, int> getDogs({int offset = 10}) {
     return InfiniteQuery(
-      key: ApiKeys.getDogs(offset),
+      key: 'getDogs($offset)',
       getNextArg: (state) {
         return switch (state) {
           InfiniteQueryState(lastPage: []) => null,
@@ -33,10 +33,6 @@ class DogsRepository {
       },
     );
   }
-}
-
-class ApiKeys {
-  static String getDogs(int limit) => 'getDogs($limit)';
 }
 
 class DogsApiInterceptor extends Interceptor {
